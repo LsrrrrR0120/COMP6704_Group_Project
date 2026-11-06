@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 from scipy.optimize import minimize
 
-from lr_opt import OPTIMIZERS, RidgeLogistic, bfgs, conjugate_gradient, gradient_descent
+from lr_opt import OPTIMIZERS, RidgeLogistic, conjugate_gradient, gradient_descent
 from lr_opt.data import train_test
 from lr_opt.linesearch import strong_wolfe
 
@@ -51,8 +51,7 @@ def test_variants(problem):
     obj, b_star = problem
     x0 = np.zeros(obj.d)
     for r in (gradient_descent(obj, x0, step="armijo", max_iter=100000),
-              conjugate_gradient(obj, x0, beta="PR+"), conjugate_gradient(obj, x0, restart=obj.d),
-              bfgs(obj, x0, init="scaled"), bfgs(obj, x0, init="hessian")):
+              conjugate_gradient(obj, x0, beta="PR+"), conjugate_gradient(obj, x0, restart=obj.d)):
         assert r.converged and near_minimizer(obj, b_star, r)
 
 

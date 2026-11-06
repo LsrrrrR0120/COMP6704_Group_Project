@@ -1,6 +1,6 @@
 """Nonlinear conjugate gradient.
 
-Owner: PAN Pan
+Owner: LIN Shenrui
 
 d_0 = -g_0,  b_{k+1} = b_k + a_k d_k,  d_{k+1} = -g_{k+1} + beta_k d_k.
 

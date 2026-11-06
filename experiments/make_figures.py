@@ -20,7 +20,7 @@ from experiments.run import ROOT
 from lr_opt.data import train_test
 from lr_opt.metrics import confusion
 
-COLORS = dict(zip(OPTS, ["#E69F00", "#0072B2", "#009E73", "#CC79A7", "#D55E00"]))   # Okabe-Ito
+COLORS = {"GD": "#E69F00", "NR": "#0072B2", "CG": "#009E73", "L-BFGS": "#D55E00"}   # Okabe-Ito
 FIG = ROOT / "figures"
 plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False,
                      "axes.grid": True, "grid.alpha": 0.3, "legend.frameon": False})
@@ -75,7 +75,7 @@ def fig_convergence(ds, res):
         times = [1000 * runs[p][k]["time"] for k in OPTS]
         iters = [runs[p][k]["n_iter"] for k in OPTS]
         kw = dict(width=w, color=[COLORS[k] for k in OPTS], edgecolor="white", hatch=hatch,
-                  label="our implementations" if p == "own" else "SciPy for CG/BFGS/L-BFGS")
+                  label="our implementations" if p == "own" else "SciPy for CG/L-BFGS")
         axes[1, 0].bar(x + (j - 0.5) * w, times, **kw)
         axes[1, 1].bar(x + (j - 0.5) * w, iters, **kw)
     for ax, title, ylabel, values in (

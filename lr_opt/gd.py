@@ -1,6 +1,6 @@
 """Gradient descent.
 
-Owner: LIN Shenrui
+Owner: YU Kaijing
 
 b_{k+1} = b_k - a * grad J(b_k), stopped when ||grad J||_2 < tol. The default is the fixed
 step a = 0.1 on the 1/n-scaled objective (below 2 / L_bar on both datasets). With

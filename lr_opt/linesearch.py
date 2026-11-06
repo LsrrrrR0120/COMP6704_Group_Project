@@ -1,4 +1,4 @@
-"""Line searches shared by CG, BFGS and L-BFGS (Nocedal & Wright, Numerical Optimization, Ch. 3).
+"""Line searches shared by CG and L-BFGS (Nocedal & Wright, Numerical Optimization, Ch. 3).
 
 strong_wolfe finds a step a > 0 along a descent direction d with
     f(x + a d) <= f(x) + c1 a g^T d                 (sufficient decrease)

@@ -5,14 +5,14 @@
 For each dataset:
   1. lambda selection by stratified 5-fold cross-validation on the training set (mean validation
      log-loss, L-BFGS), grid {1e-4, ..., 100}
-  2. the five optimizers at the selected lambda and at lambda = 0
+  2. the four optimizers at the selected lambda and at lambda = 0
   3. test log-loss over a lambda grid including 0
   4. bootstrap 95% intervals of the Newton-Raphson model, 2,000 resamples
   5. a linear-programming check of whether the training classes are linearly separable,
      i.e. whether the unregularized maximum-likelihood estimate exists (Albert & Anderson, 1984)
 
 Steps 2-3 run twice:
-  "own"   all five methods implemented in lr_opt, and
+  "own"   all four methods implemented in lr_opt, and
   "scipy" scipy.optimize.minimize for CG, BFGS and L-BFGS-B as a reference (GD and NR from lr_opt).
 """
 import json

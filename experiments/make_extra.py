@@ -14,7 +14,7 @@ from experiments.make_tables import NAMES, OPTS
 from experiments.run import ROOT
 
 DEFAULT_VARIANTS = {"GD": "GD, a = 0.1 (default)", "NR": "NR, pure (default)", "CG": "CG, FR (default)",
-                  "BFGS": "BFGS, H0 = I (default)", "L-BFGS": "L-BFGS, m = 10 (default)"}
+                  "L-BFGS": "L-BFGS, m = 10 (default)"}
 
 
 def ms(x):
@@ -84,29 +84,17 @@ def fig_ablation(E):
     axes[1].set(xlabel="memory m", ylabel="iterations", title="(b) L-BFGS memory", ylim=(0, None))
     axes[1].legend(loc="lower left", fontsize=7)
 
-    groups = [("CG", ["CG, FR (default)", "CG, FR, restart every d", "CG, PR+", "CG, PR+, restart every d"],
-               ["FR", "FR+rs", "PR+", "PR+ +rs"]),
-              ("BFGS", ["BFGS, H0 = I (default)", "BFGS, H0 scaled", "BFGS, H0 = inverse Hessian"], ["I", "scaled", "∇²J⁻¹"])]
-    x, ticks, labels = 0, [], []
-    for k, variants, short in groups:
-        for v, s in zip(variants, short):
-            for j, (d, hatch) in enumerate((("breast", None), ("prostate", "///"))):
-                axes[2].bar(x + (j - 0.5) * 0.4, E["ablation"][d][v]["n_iter"], width=0.4, color=COLORS[k],
-                            edgecolor="white", hatch=hatch)
-            ticks.append(x)
-            labels.append(s)
-            x += 1
-        x += 0.5
+    variants = ["CG, FR (default)", "CG, FR, restart every d", "CG, PR+", "CG, PR+, restart every d"]
+    for x, v in enumerate(variants):
+        for j, (d, hatch) in enumerate((("breast", None), ("prostate", "///"))):
+            axes[2].bar(x + (j - 0.5) * 0.4, E["ablation"][d][v]["n_iter"], width=0.4, color=COLORS["CG"],
+                        edgecolor="white", hatch=hatch)
     axes[2].bar([0], [0], color="0.6", label="breast")
     axes[2].bar([0], [0], color="0.6", hatch="///", edgecolor="white", label="prostate")
-    axes[2].set_xticks(ticks, labels, fontsize=7)
-    axes[2].set(ylabel="iterations", title="(c) CG coefficient / BFGS H₀")
+    axes[2].set_xticks(range(len(variants)), ["FR", "FR + restart", "PR+", "PR+ + restart"], fontsize=7)
+    axes[2].set(ylabel="iterations", title="(c) CG coefficient and restarts")
     axes[2].grid(axis="x", visible=False)
     axes[2].legend(loc="upper left", fontsize=7)
-    axes[2].annotate("CG", (1.5, 0), xytext=(0, -24), textcoords="offset points", ha="center", fontsize=8,
-                     color=COLORS["CG"], annotation_clip=False)
-    axes[2].annotate("BFGS", (5.5, 0), xytext=(0, -24), textcoords="offset points", ha="center", fontsize=8,
-                     color=COLORS["BFGS"], annotation_clip=False)
     save(fig, "ablation")
 
 

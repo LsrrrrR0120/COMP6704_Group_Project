@@ -3,11 +3,10 @@
     python -m experiments.extra
 
 1. ablation   design choices inside each method, at the selected lambda: GD step size (fixed
-              0.01 / 0.1 / 1/L, Armijo), CG coefficient (FR / PR+) and restarts, BFGS initial
-              matrix, L-BFGS memory m. No iteration cap (10^6), so every variant converges.
+              0.01 / 0.1 / 1/L, Armijo), CG coefficient (FR / PR+) and restarts, L-BFGS memory m. No iteration cap (10^6), so every variant converges.
 2. rates      Hessian spectrum at the minimizer, the predicted linear rate of fixed-step GD
               and the measured one, and the per-iteration gradient-norm ratios of all methods.
-3. splits     the whole pipeline (split, CV choice of lambda, five optimizers) on 20 random
+3. splits     the whole pipeline (split, CV choice of lambda, four optimizers) on 20 random
               70/30 splits instead of the single fixed split.
 4. scaling    per-iteration cost and time to tolerance on synthetic data with growing dimension d,
               to check the complexity analysis (n = 4000, d = 10 ... 1000, lambda = 1).
@@ -17,7 +16,7 @@ import json
 import numpy as np
 
 from experiments.run import ROOT, SEED, is_separable, select_lambda
-from lr_opt import OPTIMIZERS, RidgeLogistic, bfgs, conjugate_gradient, gradient_descent, lbfgs, newton_raphson
+from lr_opt import OPTIMIZERS, RidgeLogistic, conjugate_gradient, gradient_descent, lbfgs, newton_raphson
 from lr_opt.data import DATASETS, train_test
 from lr_opt.metrics import classification_metrics
 
@@ -51,9 +50,6 @@ def ablation(obj):
         "CG, FR, restart every d": lambda: conjugate_gradient(obj, x0, beta="FR", restart=obj.d, max_iter=MAX_ITER),
         "CG, PR+": lambda: conjugate_gradient(obj, x0, beta="PR+", max_iter=MAX_ITER),
         "CG, PR+, restart every d": lambda: conjugate_gradient(obj, x0, beta="PR+", restart=obj.d, max_iter=MAX_ITER),
-        "BFGS, H0 = I (default)": lambda: bfgs(obj, x0, init="identity", max_iter=MAX_ITER),
-        "BFGS, H0 scaled": lambda: bfgs(obj, x0, init="scaled", max_iter=MAX_ITER),
-        "BFGS, H0 = inverse Hessian": lambda: bfgs(obj, x0, init="hessian", max_iter=MAX_ITER),
         **{f"L-BFGS, m = {m}" + (" (default)" if m == 10 else ""):
            (lambda m=m: lbfgs(obj, x0, m=m, max_iter=MAX_ITER)) for m in (1, 3, 5, 10, 20, 50)},
         "NR, pure (default)": lambda: newton_raphson(obj, x0),
@@ -106,7 +102,6 @@ def scaling(n=4000, dims=(10, 30, 100, 300, 1000), lam=1.0):
             "GD": lambda: gradient_descent(obj, x0, step="armijo", max_iter=20000),
             "NR": lambda: newton_raphson(obj, x0),
             "CG": lambda: conjugate_gradient(obj, x0, beta="FR", max_iter=20000),
-            "BFGS": lambda: bfgs(obj, x0, max_iter=20000),
             "L-BFGS": lambda: lbfgs(obj, x0, max_iter=20000),
         }
         out[d] = {}
