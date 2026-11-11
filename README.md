@@ -67,6 +67,8 @@ experiments/
   make_figures.py         -> figures/*.png, *.pdf
   extra.py                ablations, curvature/rates, 20 random splits, scaling -> results/extra.json
   make_extra.py           -> results/extra.md, figures/{ablation,order,splits,scaling}.*
+  methods.py              per-method studies: Newton starting points and cost, CG line search c2,
+                          L-BFGS memory at d = 1000 -> results/methods.json
 data/                     prostate_cancer.csv and its provenance (data/README.md, data/fetch_prostate.py)
 tests/                    derivative checks, convergence of every method to the minimizer, Wolfe conditions
 results/  figures/        generated outputs (committed)
@@ -99,6 +101,7 @@ python -m experiments.make_tables       # -> results/tables.md
 python -m experiments.make_figures      # -> figures/
 python -m experiments.extra             # additional experiments -> results/extra.json
 python -m experiments.make_extra        # -> results/extra.md, figures/
+python -m experiments.methods           # per-method studies -> results/methods.json
 ```
 
 Wall-clock times depend on the machine; iteration counts, costs and metrics are deterministic.
